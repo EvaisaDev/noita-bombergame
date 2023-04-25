@@ -1,0 +1,112 @@
+<Sprite
+ filename="mods/evaisa.bombergame/files/gfx/player_top.png"
+ offset_x="8"
+ offset_y="16"
+ default_animation="stand_down"  
+ >
+
+    <!-- stand_down -->
+    <RectAnimation
+    name="stand_down"
+    pos_x="0"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_downright -->
+    <RectAnimation
+    name="stand_downright"
+    pos_x="16"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_right -->
+    <RectAnimation
+    name="stand_right"
+    pos_x="32"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_upright -->
+    <RectAnimation
+    name="stand_upright"
+    pos_x="48"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_up -->
+    <RectAnimation
+    name="stand_up"
+    pos_x="64"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_upleft -->
+    <RectAnimation
+    name="stand_upleft"
+    pos_x="80"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_left -->
+    <RectAnimation
+    name="stand_left"
+    pos_x="96"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+    <!-- stand_downleft -->
+    <RectAnimation
+    name="stand_downleft"
+    pos_x="112"
+    pos_y="0"
+    frame_count="1"
+    frame_width="16"
+    frame_height="16"
+    frame_wait="0.23"
+    frames_per_row="1"
+    loop="1"   >
+    </RectAnimation>
+
+</Sprite>

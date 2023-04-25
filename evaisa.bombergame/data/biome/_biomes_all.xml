@@ -1,0 +1,9 @@
+<BiomesToLoad 
+	biome_image_map="mods/evaisa.bombergame/files/biome/biome_map.png"
+	biome_offset_y="14" >
+	<Biome 
+		biome_filename="mods/evaisa.bombergame/files/biome/arena.xml" 
+		height_index="1"
+		color="ffebaaaa" >
+	</Biome>
+</BiomesToLoad>

@@ -1,0 +1,10 @@
+<Entity >
+
+  <LifetimeComponent
+  	lifetime="240"
+  	randomize_lifetime.min="-50"
+  	randomize_lifetime.max="50"
+  	/>
+  
+  
+</Entity>

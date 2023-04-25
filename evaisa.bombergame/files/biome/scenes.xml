@@ -1,0 +1,5 @@
+<PixelScenes>
+    <mBufferedPixelScenes>
+        <PixelScene clean_area_before="1" material_filename="mods/evaisa.bombergame/files/biome/scenes/arena_grid.png" pos_x="-508" pos_y="-508" skip_biome_checks="1" ></PixelScene>
+    </mBufferedPixelScenes>
+</PixelScenes>
