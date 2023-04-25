@@ -20,6 +20,7 @@ local throw_strength = tonumber(GlobalsGetValue("bomberguy_throw_strength", "1")
 local speed_multipier = tonumber(GlobalsGetValue("bomberguy_speed", "60"))
 local bomb_cooldown = tonumber(GlobalsGetValue("bomberguy_bomb_cooldown", "30"))
 local max_active_bombs = tonumber(GlobalsGetValue("bomberguy_max_active_bombs", "1"))
+local bomb_power = tonumber(GlobalsGetValue("bomberguy_bomb_power", "1"))
 
 ------------------------------------------------
 
@@ -154,6 +155,12 @@ if(KeyPressed(Keys.Bomb) and active_bomb_count < max_active_bombs and GameGetFra
     local bomb = EntityLoad("mods/evaisa.bombergame/files/entities/bomb.xml", bomb_location_x, bomb_location_y)
 
     EntityAddTag(bomb, "player_bomb")
+
+    local projectile_component = EntityGetFirstComponentIncludingDisabled(bomb, "ProjectileComponent")
+
+    if(projectile_component)then
+        ComponentSetValue2(projectile_component, "ray_energy", bomb_power * 16)
+    end
 
     last_bomb_frame = GameGetFrameNum()
 

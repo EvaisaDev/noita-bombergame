@@ -1,4 +1,10 @@
+package.path = package.path .. ";./mods/evaisa.bombergame/lib/?.lua"
+package.path = package.path .. ";./mods/evaisa.bombergame/lib/?/init.lua"
+
 game_funcs = dofile("mods/evaisa.mp/files/scripts/game_functions.lua")
+
+local world_gen = dofile("mods/evaisa.bombergame/files/scripts/world_gen.lua")
+
 
 local Bombergame = {
     id = "bombergame",
@@ -19,8 +25,10 @@ local Bombergame = {
 
     end,
     start = function(lobby)
+        local seed = tonumber(steam.matchmaking.getLobbyData(lobby, "seed") or 1)
 
-        
+        SetWorldSeed( seed )
+
         -- kill player entity
         local players = EntityGetWithTag("player_unit")
         for _, player in ipairs(players) do
@@ -28,11 +36,22 @@ local Bombergame = {
         end
 
         -- spawn player entity
-        local new_player = EntityLoad("mods/evaisa.bombergame/files/entities/bomberguy.xml", 0, 0)
+        local new_player = EntityLoad("mods/evaisa.bombergame/files/entities/bomberguy.xml", -16, -16)
         game_funcs.SetPlayerEntity(new_player)
         np.RegisterPlayerEntityId(new_player)
 
-        BiomeMapLoad_KeepPlayer("mods/evaisa.bombergame/files/scripts/biomes/map_arena.lua", "mods/evaisa.bombergame/files/biome/scenes.xml")
+
+        --BiomeMapLoad_KeepPlayer("mods/evaisa.bombergame/files/scripts/biomes/map_arena.lua", "mods/evaisa.bombergame/files/biome/scenes.xml")
+
+
+        world_gen:generate()
+
+        np.ForceLoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/arena_grid.png", "", 0, 0, "", true)
+
+        local spawn_pos = world_gen:GetSpawnPoint()
+
+        EntitySetTransform(new_player, spawn_pos.x, spawn_pos.y)
+        EntityApplyTransform(new_player, spawn_pos.x, spawn_pos.y)
 
     end,
     update = function(lobby)

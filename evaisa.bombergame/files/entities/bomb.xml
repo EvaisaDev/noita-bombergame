@@ -26,7 +26,7 @@
         create_cell_probability="40" 
         hole_destroy_liquid="0" 
         hole_enabled="1" 
-        ray_energy="6000000"
+        ray_energy="160"
         particle_effect="1" 
         damage_mortals="1"
         physics_explosion_power.min="2.2" 
@@ -52,7 +52,7 @@
   </Base>
 
   <!-- fx -->
-
+  <!--
   <ParticleEmitterComponent 
     emitted_material_name="smoke"
     offset.x="-1"
@@ -75,7 +75,7 @@
     emission_interval_max_frames="1"
     is_emitting="1" >
   </ParticleEmitterComponent>
-  
+  -->
   <ParticleEmitterComponent 
     emitted_material_name="spark"
     offset.x="-1"
