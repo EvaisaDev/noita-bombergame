@@ -31,6 +31,7 @@
     gravity_x="0"
     gravity_y="0"
     air_friction="1"
+    mass="0"
     >
   </VelocityComponent>
 

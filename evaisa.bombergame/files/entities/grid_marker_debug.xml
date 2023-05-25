@@ -1,0 +1,27 @@
+<Entity >
+   
+    <SpriteComponent
+        _tags="grid_marker"
+        image_file = "data/fonts/font_pixel_white.xml"
+        emissive = "1"
+        is_text_sprite = "1"
+        offset_x = "0"
+        offset_y = "0"
+        alpha = "0.2"
+        update_transform = "1"
+        update_transform_rotation = "0"
+        never_ragdollify_on_death = "1"
+        text = ""
+        has_special_scale = "1"
+        special_scale_x = "0.5"
+        special_scale_y = "0.5"
+        z_index = "-5000"
+    ></SpriteComponent>
+    <StreamingKeepAliveComponent/>
+    
+    <LightComponent 
+        _enabled="1" 
+        radius="64" >
+    </LightComponent>
+
+</Entity>

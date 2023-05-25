@@ -8,6 +8,8 @@
         wang_color="ff12ab99"
         hp="200000"
         durability="120000"
+        solid_friction="0"
+        slippery="1"
         audio_physics_material_event="rock"
         audio_physics_material_wall="rock"
         audio_physics_material_solid="rock"
@@ -45,8 +47,14 @@
         name="bomber_box" 
         ui_name="Box"
         wang_color="ffabb2b7"
-        hp="10"
-        durability="5"
+        hp="20"
+        durability="20"
+        cell_type="liquid"
+        liquid_sand="0"
+        liquid_static="1"
+        platform_type="1"
+        solid_friction="0"
+        slippery="1"   
         audio_physics_material_event="rock"
         audio_physics_material_wall="rock"
         audio_physics_material_solid="rock"
@@ -57,23 +65,6 @@
             color="ff413F24"
             pixel_all_around="ff5d5a33"
             >
-            <Edge>
-                <EdgeGraphics 
-                    color="ff233112" 
-                    overwrite="1" 
-                    percent="1" 
-                    require_same_material="0" 
-                    require_same_material_type="1" 
-                    type="CARDINAL_DIRECTIONS" 
-                    z="1" >
-                    <Images>
-				    <Image 
-						filename="mods/evaisa.bombergame/files/gfx/materials/edge_wood.png" 
-							min_angle="269.8" 
-						max_angle="270.2" />
-                    </Images>
-                </EdgeGraphics>
-            </Edge>
         </Graphics>
     </CellDataChild>  
     
@@ -83,7 +74,9 @@
   	tags="[box2d]"
 	burnable="1"
 	density="6"
-	cell_type="solid"
+    cell_type="liquid"
+    liquid_sand="0"
+    liquid_static="1"
 	wang_color="ffeba8a8"
 	generates_smoke="0"
 	on_fire="0"
@@ -91,11 +84,37 @@
 	requires_oxygen="1"
 	temperature_of_fire="5"
 	autoignition_temperature="99"
-	solid_static_type="0"
-	solid_collide_with_self="1"
-	solid_restitution="0.45"
-	solid_gravity_scale="0"
 	platform_type="1"
+	solid_friction="0.9"
+	durability="11"
+	hp="2000"
+	audio_physics_material_wall="gravel"
+	audio_physics_material_solid="wood"
+	>
+    <Graphics
+		normal_mapped="1"
+		color="ff586679"
+	>
+    </Graphics>
+  </CellData>
+    
+    <CellData
+	name="bombergame_bomb_nocollide"
+	ui_name="$mat_fuse"
+  	tags="[box2d]"
+	burnable="1"
+	density="6"
+    cell_type="liquid"
+    liquid_sand="0"
+    liquid_static="1"
+	wang_color="ffebaa28"
+	generates_smoke="0"
+	on_fire="0"
+	fire_hp="600"
+	requires_oxygen="1"
+	temperature_of_fire="5"
+	autoignition_temperature="99"
+	platform_type="0"
 	solid_friction="0.9"
 	durability="11"
 	hp="2000"

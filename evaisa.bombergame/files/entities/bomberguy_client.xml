@@ -1,0 +1,92 @@
+<Entity name="client" tags="client,mortal,human,hittable,peasant,prey,teleportable,polymorphable_NOT" >
+
+  <SpriteAnimatorComponent>
+  </SpriteAnimatorComponent>
+
+  <SpriteComponent 
+      _tags="character,body_top" 
+      alpha="1" 
+      image_file="mods/evaisa.bombergame/files/gfx/player_top.xml" 
+      offset_x="0" 
+      offset_y="0" 
+      rect_animation="stand_down" 
+      additive="0"
+      emissive="0"
+      z_index="-1"
+  ></SpriteComponent>
+
+  <SpriteComponent 
+      _tags="character,body_bottom" 
+      alpha="1" 
+      image_file="mods/evaisa.bombergame/files/gfx/player_bottom.xml" 
+      offset_x="0" 
+      offset_y="0" 
+      rect_animation="stand_down" 
+      z_index="0.6"
+  ></SpriteComponent>
+
+    <DamageModelComponent 
+        air_in_lungs="7" 
+        air_in_lungs_max="7" 
+        air_lack_of_damage="0.6" 
+        air_needed="1" 
+        falling_damage_damage_max="1.2" 
+        falling_damage_damage_min="0.1" 
+        falling_damage_height_max="250" 
+        falling_damage_height_min="70" 
+        falling_damages="0" 
+        fire_damage_amount="0" 
+        fire_probability_of_ignition="0" 
+        invincibility_frames="60"
+        hp="4" 
+        is_on_fire="0" 
+        materials_damage="1" 
+        materials_that_damage="acid,lava,blood_cold_vapour,blood_cold,poison,radioactive_gas,radioactive_gas_static,rock_static_radioactive,rock_static_poison,ice_radioactive_static,ice_radioactive_glass,ice_acid_static,ice_acid_glass,rock_static_cursed,magic_gas_hp_regeneration,gold_radioactive,gold_static_radioactive,rock_static_cursed_green,cursed_liquid,poo_gas"  
+        materials_how_much_damage="0.005,0.003,0.0006,0.0009,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.005,-0.005,0.0002,0.0002,0.004,0.0005,0.00001" 
+        ragdollify_child_entity_sprites="0"
+        blood_spray_material=""
+        blood_multiplier="4"
+        physics_objects_damage="0"
+        critical_damage_resistance="1"
+        ><damage_multipliers
+        explosion="0.35" >
+        </damage_multipliers>
+    </DamageModelComponent>
+
+    <SpriteComponent
+        _tags="username"
+        image_file = "data/fonts/font_pixel_white.xml"
+        emissive = "1"
+        is_text_sprite = "1"
+        offset_x = "0"
+        offset_y = "42"
+        alpha = "1"
+        update_transform = "1"
+        update_transform_rotation = "0"
+        never_ragdollify_on_death = "1"
+        text = ""
+        has_special_scale = "1"
+        special_scale_x = "0.7"
+        special_scale_y = "0.7"
+        z_index = "-5000"
+    ></SpriteComponent>
+
+  <!--
+  <SpriteComponent 
+    _enabled="1" 
+    alpha="1" 
+    offset_x="2.5"
+    offset_y="2.5"
+    image_file="data/ui_gfx/debug_marker.png" 
+    emissive="1"
+    z_index="-4"
+     >
+  </SpriteComponent>
+  -->
+
+  <LuaComponent
+      script_damage_about_to_be_received = "mods/evaisa.bombergame/files/scripts/prevent_damage.lua"
+      >
+  </LuaComponent>
+
+</Entity>

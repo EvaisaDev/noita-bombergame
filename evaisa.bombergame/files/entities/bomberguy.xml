@@ -25,11 +25,9 @@
         materials_damage="1" 
         materials_that_damage="acid,lava,blood_cold_vapour,blood_cold,poison,radioactive_gas,radioactive_gas_static,rock_static_radioactive,rock_static_poison,ice_radioactive_static,ice_radioactive_glass,ice_acid_static,ice_acid_glass,rock_static_cursed,magic_gas_hp_regeneration,gold_radioactive,gold_static_radioactive,rock_static_cursed_green,cursed_liquid,poo_gas"  
         materials_how_much_damage="0.005,0.003,0.0006,0.0009,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.001,0.005,-0.005,0.0002,0.0002,0.004,0.0005,0.00001" 
-        ragdoll_filenames_file="data/ragdolls/player/filenames.txt" 
-        ragdoll_offset_y="-5"
-        ragdollify_child_entity_sprites="1"
+        ragdollify_child_entity_sprites="0"
         blood_spray_material=""
-        blood_multiplier="0"
+        blood_multiplier="4"
         physics_objects_damage="0"
         critical_damage_resistance="1"
         ><damage_multipliers
@@ -63,8 +61,7 @@
     ></SpriteComponent>
 
   <LuaComponent
-      script_source_file = "mods/evaisa.bombergame/files/scripts/player_controller.lua"
-      execute_every_n_frame = "0"
+      script_damage_received = "mods/evaisa.bombergame/files/scripts/damage_received.lua"
       >
   </LuaComponent>
 
@@ -87,6 +84,12 @@
     eating_area_max.y="0"
     eating_cells_per_frame="0"
   ></PlatformShooterPlayerComponent>
+
+  <AudioListenerComponent></AudioListenerComponent>
+
+  <KickComponent
+    can_kick="0"
+  ></KickComponent>
   
   <PathFindingGridMarkerComponent
     player_marker_radius="100.0"
@@ -103,7 +106,7 @@
     platforming_type="2"
     check_collision_max_size_x="4" 
     check_collision_max_size_y="4" 
-    climb_over_y="0" 
+    climb_over_y="2" 
     collision_aabb_min_x="-4" 
     collision_aabb_max_x="4" 
     collision_aabb_min_y="-3"
@@ -113,10 +116,10 @@
     eff_hg_position_y="5" 
     eff_hg_size_x="6.42857" 
     eff_hg_size_y="5.14286" 
-    eff_hg_velocity_max_x="19.5787896514" 
-    eff_hg_velocity_max_y="-11.5714" 
-    eff_hg_velocity_min_x="-19.5714" 
-    eff_hg_velocity_min_y="-40" 
+    eff_hg_velocity_max_x="60" 
+    eff_hg_velocity_max_y="60" 
+    eff_hg_velocity_min_x="-60" 
+    eff_hg_velocity_min_y="-60" 
     eff_hg_damage_min="10"
     eff_hg_damage_max="95"
     eff_hg_update_box2d="0"
@@ -157,8 +160,8 @@
     jump_velocity_x="56"
     fly_model_player="0"
     fly_smooth_y="0"
-    fly_speed_max_up="0"
-    fly_speed_max_down="0"
+    fly_speed_max_up="60"
+    fly_speed_max_down="60"
     fly_speed_mult="0"
     fly_speed_change_spd="0"
     mouse_look="0" 
@@ -169,10 +172,10 @@
     fly_velocity_x="0" 
     accel_x="0" 
     turning_buffer="0.5" 
-    velocity_min_x="-57" 
-    velocity_max_x="57" 
-    velocity_min_y="-57"
-    velocity_max_y="57"
+    velocity_min_x="-6000" 
+    velocity_max_x="6000" 
+    velocity_min_y="-6000"
+    velocity_max_y="6000"
   ></CharacterPlatformingComponent>
 
 

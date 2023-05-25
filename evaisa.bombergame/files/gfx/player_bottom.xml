@@ -1,5 +1,5 @@
 <Sprite
- filename="mods/evaisa.bombergame/files/gfx/player.png"
+ filename="mods/evaisa.bombergame/files/gfx/bombguy.png"
  offset_x="8"
  offset_y="0"
  default_animation="stand_down"  
@@ -9,104 +9,196 @@
     <RectAnimation
     name="stand_down"
     pos_x="0"
-    pos_y="25"
-    frame_count="1"
+    pos_y="24"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_downright -->
     <RectAnimation
     name="stand_downright"
-    pos_x="16"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="56"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="10"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_right -->
     <RectAnimation
     name="stand_right"
-    pos_x="32"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="88"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="10"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_upright -->
     <RectAnimation
     name="stand_upright"
-    pos_x="48"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="120"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="10"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_up -->
     <RectAnimation
     name="stand_up"
-    pos_x="64"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="152"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_upleft -->
     <RectAnimation
     name="stand_upleft"
-    pos_x="80"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="184"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_left -->
     <RectAnimation
     name="stand_left"
-    pos_x="96"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="216"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
     loop="1"   >
     </RectAnimation>
 
     <!-- stand_downleft -->
     <RectAnimation
     name="stand_downleft"
-    pos_x="112"
-    pos_y="25"
-    frame_count="1"
+    pos_x="0"
+    pos_y="248"
+    frame_count="4"
     frame_width="16"
     frame_height="8"
     frame_wait="0.23"
-    frames_per_row="1"
+    frames_per_row="4"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
     loop="1"   >
+    </RectAnimation>
+
+        <!-- bomb_down -->
+    <RectAnimation
+    name="bomb_down"
+    pos_x="72"
+    pos_y="24"
+    frame_count="3"
+    frame_width="16"
+    frame_height="8"
+    frame_wait="0.10"
+    frames_per_row="3"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
+    loop="0"   
+    next_animation="stand_down">
+    </RectAnimation>
+
+    <!-- bomb_right -->
+    <RectAnimation
+    name="bomb_right"
+    pos_x="72"
+    pos_y="56"
+    frame_count="3"
+    frame_width="16"
+    frame_height="8"
+    frame_wait="0.10"
+    frames_per_row="3"
+    has_offset="1"
+    offset_x="10"
+    offset_y="0"
+    loop="0"    
+    next_animation="stand_right">
+    </RectAnimation>
+
+    <!-- bomb_up -->
+    <RectAnimation
+    name="bomb_up"
+    pos_x="72"
+    pos_y="88"
+    frame_count="3"
+    frame_width="16"
+    frame_height="8"
+    frame_wait="0.10"
+    frames_per_row="3"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
+    loop="0"    
+    next_animation="stand_up">
+    </RectAnimation>
+
+    <!-- bomb_left -->
+    <RectAnimation
+    name="bomb_left"
+    pos_x="72"
+    pos_y="120"
+    frame_count="3"
+    frame_width="16"
+    frame_height="8"
+    frame_wait="0.10"
+    frames_per_row="3"
+    has_offset="1"
+    offset_x="8"
+    offset_y="0"
+    loop="0"    
+    next_animation="stand_left">
     </RectAnimation>
 
 </Sprite>
