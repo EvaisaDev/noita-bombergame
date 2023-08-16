@@ -876,6 +876,8 @@ Bombergame = {
                 if(physics_body_ids ~= nil and physics_body_ids[1] ~= nil)then
                     local body_x, body_y = GamePosToPhysicsPos(message.x, message.y)
                     PhysicsBodyIDSetTransform(physics_body_ids[1], body_x, body_y, 0, 0, 0)
+                    PhysicsBodyIDSetDamping(physics_body_ids[1], 100000, 100000)
+                    physicsBodyIDSetGravityScale(physics_body_ids[1], 0)
                 end
 
                 local character_data_component = EntityGetFirstComponentIncludingDisabled( client, "CharacterDataComponent" )
