@@ -872,10 +872,10 @@ Bombergame = {
 
                 EntityApplyTransform(client, message.x, message.y, message.r, message.w, message.h)
 
-                local physics_body = EntityGetFirstComponentIncludingDisabled( client, "PhysicsBody2Component" )
-                if(physics_body ~= nil)then
+                local physics_body_ids = PhysicsBodyIDGetFromEntity(client)
+                if(physics_body_ids ~= nil and physics_body_ids[1] ~= nil)then
                     local body_x, body_y = GamePosToPhysicsPos(message.x, message.y)
-                    PhysicsComponentSetTransform(physics_body, body_x, body_y, 0, 0, 0)
+                    PhysicsBodyIDSetTransform(physics_body_ids[1], body_x, body_y, 0, 0, 0)
                 end
 
                 local character_data_component = EntityGetFirstComponentIncludingDisabled( client, "CharacterDataComponent" )
