@@ -11,10 +11,16 @@
     </PhysicsBody2Component>
     <PhysicsImageShapeComponent
       centered="1" 
-      image_file="mods/evaisa.bombergame/files/gfx/entities/crate.png"
+      image_file="mods/evaisa.bombergame/files/gfx/entities/crate_new_alt.png"
       material="bomber_box" >
     </PhysicsImageShapeComponent>
   </Base>
+  
+  <SpriteComponent
+    image_file="mods/evaisa.bombergame/files/gfx/entities/crate_new_background_alt.png"
+    offset_x="8"
+    offset_y="8"
+  />
 
   <HitboxComponent 
     aabb_max_x="8" 

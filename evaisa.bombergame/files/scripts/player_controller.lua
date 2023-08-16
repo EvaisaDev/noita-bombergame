@@ -279,6 +279,11 @@ if(bombing == true and GameGetFrameNum() > (last_bomb_frame + bomb_throw_frame))
     
     local current_bombs = json.parse(GlobalsGetValue("bombergame_current_bombs", "[]"))
 
+    local bomb_bodies = PhysicsBodyIDGetFromEntity(bomb)
+    for k, v in ipairs(bomb_bodies) do
+        PhysicsBodyIDSetGravityScale(v, 0)
+    end
+
     table.insert(current_bombs, {
         id = custom_id,
         x = bomb_location_x,

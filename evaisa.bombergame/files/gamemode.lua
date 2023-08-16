@@ -3,6 +3,7 @@ package.path = package.path .. ";./mods/evaisa.bombergame/lib/?/init.lua"
 
 local json = dofile("mods/evaisa.mp/lib/json.lua")
 local vector = dofile("mods/evaisa.bombergame/lib/vector.lua")
+local rng = dofile("mods/evaisa.bombergame/lib/rng.lua")
 
 game_funcs = dofile("mods/evaisa.mp/files/scripts/game_functions.lua")
 
@@ -13,6 +14,8 @@ local player_entity = nil
 local dead = false
 local world_loaded = false
 local game_finished = false
+local randomized_seed = true
+random = rng.new(0)
 
 debugging = false
 
@@ -181,20 +184,172 @@ ResetPowerupData = function()
     GlobalsSetValue("bomberguy_box_penetration", "0")
 end
 
-local Bombergame = {
+Bombergame = {
     id = "bombergame",
     name = "Bombergame",
     version = 0.11,
+    allow_in_progress_joining = false,
     settings = {
+        {
+            id = "random_seed",
+            name = "Random Seed",
+            description = "Randomized seed every restart.",
+            type = "bool",
+            default = true
+        },  
+        {
+			id = "map_size_x",
+            require = function(setting_self)
+                return true
+            end,
+			name = "Arena Size Horizontal",
+			description = "How many squares should the Arena be horizontally",
+			type = "slider",
+			min = 5,
+			max = 61,
+			default = 11;
+			display_multiplier = 1,
+			formatting_string = " $0",
+			width = 100,
+            modifier = function(value)
+                value = math.floor(value)
+                -- turn the value odd if it is not
+                if(value % 2 == 0)then
+                    value = value + 1
+                end
+                return value
+            end,
+		},
+        {
+			id = "map_size_y",
+            require = function(setting_self)
+                return true
+            end,
+			name = "Arena Size Vertical",
+			description = "How many squares should the Arena be vertically",
+			type = "slider",
+			min = 5,
+			max = 61,
+			default = 11;
+			display_multiplier = 1,
+			formatting_string = " $0",
+			width = 100,
+            modifier = function(value)
+                value = math.floor(value)
+                -- turn the value odd if it is not
+                if(value % 2 == 0)then
+                    value = value + 1
+                end
+                return value
+            end,
+		},
+        {
+			id = "crate_percentage",
+            require = function(setting_self)
+                return true
+            end,
+			name = "Crate Percentage",
+			description = "What percentage of the map should be filled with crates",
+			type = "slider",
+			min = 0,
+			max = 1,
+			default = 0.85;
+			display_multiplier = 1,
+            display_fractions = true,
+			formatting_string = " $0",
+			width = 100,
+            modifier = function(value)
+                -- round to 2 decimals
+                value = math.floor(value * 100) / 100
+                return value
+            end,
+		},
+        {
+			id = "powerup_percentage",
+            require = function(setting_self)
+                return true
+            end,
+			name = "Powerup Percentage",
+			description = "What percentage of crates should hide powerups",
+			type = "slider",
+			min = 0,
+			max = 1,
+			default = 0.1;
+			display_multiplier = 1,
+            display_fractions = true,
+			formatting_string = " $0",
+			width = 100,
+            modifier = function(value)
+                -- round to 2 decimals
+                value = math.floor(value * 100) / 100
+                return value
+            end,
+		},
+        {
+			id = "explosive_percentage",
+            require = function(setting_self)
+                return true
+            end,
+			name = "Explosive Probability",
+			description = "What percentage of crates should be explosive",
+			type = "slider",
+			min = 0,
+			max = 1,
+			default = 0.1;
+			display_multiplier = 1,
+            display_fractions = true,
+			formatting_string = " $0",
+			width = 100,
+            modifier = function(value)
+                -- round to 2 decimals
+                value = math.floor(value * 100) / 100
+                return value
+            end,
+		},
     },
     default_data = {
     },
     refresh = function(lobby)
-        GlobalsSetValue("bomberguy_arena_size_x", "61")
-        GlobalsSetValue("bomberguy_arena_size_y", "61")
+        local random_seeds = steam.matchmaking.getLobbyData(lobby, "setting_random_seed")
+        if (random_seeds == nil) then
+            random_seeds = "true"
+        end
+        randomized_seed = random_seeds == "true"
+
+
+        
+        local map_size_x = steam.matchmaking.getLobbyData(lobby, "setting_map_size_x")
+        if (map_size_x == nil) then
+            map_size_x = 11
+        end
+        GlobalsSetValue("bomberguy_arena_size_x", tostring(math.floor(map_size_x)))
+
+        local map_size_y = steam.matchmaking.getLobbyData(lobby, "setting_map_size_y")
+        if (map_size_y == nil) then
+            map_size_y = 11
+        end
+        GlobalsSetValue("bomberguy_arena_size_y", tostring(math.floor(map_size_y)))
+
+        local crate_percentage = steam.matchmaking.getLobbyData(lobby, "setting_crate_percentage")
+        if (crate_percentage == nil) then
+            crate_percentage = 0.85
+        end
+        GlobalsSetValue("bomberguy_crate_percentage", tostring(crate_percentage))
+
+        local powerup_percentage = steam.matchmaking.getLobbyData(lobby, "setting_powerup_percentage")
+        if (powerup_percentage == nil) then
+            powerup_percentage = 0.1
+        end
+        GlobalsSetValue("bomberguy_powerup_percentage", tostring(powerup_percentage))
+
+        local explosive_percentage = steam.matchmaking.getLobbyData(lobby, "setting_explosive_percentage")
+        if (explosive_percentage == nil) then
+            explosive_percentage = 0.1
+        end
+        GlobalsSetValue("bomberguy_explosive_percentage", tostring(explosive_percentage))
     end,
     enter = function(lobby)
-
+        Bombergame.refresh(lobby)
     end,
     start = function(lobby)
         GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
@@ -237,7 +392,27 @@ local Bombergame = {
         
         local seed = tonumber(steam.matchmaking.getLobbyData(lobby, "seed") or 1)
 
-        SetWorldSeed( seed )
+        if(randomized_seed and steamutils.IsOwner(lobby))then
+            local a, b, c, d, e, f = GameGetDateAndTimeLocal()
+            SetRandomSeed(GameGetFrameNum() + a + b + c + d + e + f+ 235123, GameGetFrameNum() + a + b + c + d + e + f + 325325)
+            --steam.matchmaking.setLobbyData(lobby, "seed", tostring(Random(1, 1000000000)))
+            seed = Random(1, 1000000000)
+            steam.matchmaking.setLobbyData(lobby, "rng_seed", tostring(seed))
+            print("randomized seed")
+            
+            steam.matchmaking.setLobbyData(lobby, "spawnpoint_count", tostring(steamutils.getPlayerCount(lobby, false)))
+        end
+
+
+        if(randomized_seed)then
+            seed = tonumber(steam.matchmaking.getLobbyData(lobby, "rng_seed") or 1)
+        end
+       -- SetWorldSeed( seed )
+
+        random = rng.new(seed)
+        print("seed: "..tostring(seed))
+
+        --SetRandomSeed(0, 0)
 
         -- kill player entity
         local players = EntityGetWithTag("player_unit")
@@ -265,19 +440,15 @@ local Bombergame = {
         end
         
 
-        load_scene = true
+        load_world = true
         
 
     end,
     update = function(lobby)
-        if(load_scene)then
-            LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/arena_grid.png", "", 0, 0, "", true, false, nil, nil, true)
-            load_scene = false
-            load_world = true
-        elseif(load_world)then
-            local arena_size_x = tonumber(GlobalsGetValue("bomberguy_arena_size_x", "61"))
-            local arena_size_y = tonumber(GlobalsGetValue("bomberguy_arena_size_y", "61"))
-            world_gen:generate(lobby, vector.new(arena_size_x, arena_size_y), nil, nil, nil)
+        if(load_world)then
+            local arena_size_x = tonumber(GlobalsGetValue("bomberguy_arena_size_x", "11"))
+            local arena_size_y = tonumber(GlobalsGetValue("bomberguy_arena_size_y", "11"))
+            world_gen:generate(lobby, vector.new(arena_size_x, arena_size_y), tonumber(GlobalsGetValue("bomberguy_crate_percentage", "0.85")), tonumber(GlobalsGetValue("bomberguy_powerup_percentage", "0.1")), tonumber(steam.matchmaking.getLobbyData(lobby, "spawnpoint_count") or 32))
 
             local spawn_pos = world_gen:GetSpawnPoint(GetPlayerIndex(lobby))
     
@@ -334,7 +505,7 @@ local Bombergame = {
                     local powerup = GetPowerup(taken_powerups, box_cell[1], box_cell[2])
 
                     if(powerup)then
-                        local id = Random(1, 100000000)
+                        local id = random.range(1, 100000000)
                         LoadPowerupEntity(id, powerup, box_cell[1], box_cell[2])
                         AddSpawnedPowerup(lobby, box_cell[1], box_cell[2], id)
                         steamutils.send("powerup_spawned", {id, powerup, box_cell[1], box_cell[2]}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
@@ -357,7 +528,7 @@ local Bombergame = {
 
                 if physbodyComp then
                     
-                    local x, y, r, vx, vy, av = np.PhysBodyGetTransform(physbodyComp)
+                    local x, y, r, vx, vy, av = PhysicsComponentGetTransform(physbodyComp)
 
                     --print("bomb update: "..x..", "..y..", "..r..", "..vx..", "..vy..", "..av)
 
@@ -538,7 +709,7 @@ local Bombergame = {
                     local powerup = GetPowerup(taken_powerups, message[1], message[2])
     
                     if(powerup)then
-                        local id = Random(1, 100000000)
+                        local id = random.range(1, 100000000)
                         LoadPowerupEntity(id, powerup, message[1], message[2])
                         AddSpawnedPowerup(lobby, message[1], message[2], id)
                         steamutils.send("powerup_spawned", {id, powerup, message[1], message[2]}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
@@ -604,6 +775,11 @@ local Bombergame = {
                 end
             
                 EntitySetName(bomb, "bomb_"..tostring(message.id))
+
+                local bomb_bodies = PhysicsBodyIDGetFromEntity(bomb)
+                for k, v in ipairs(bomb_bodies) do
+                    PhysicsBodyIDSetGravityScale(v, 0)
+                end
             end,
             bomb_update = function(lobby, event, message, user)
                 local bomb = EntityGetWithName(message.name)
@@ -611,7 +787,7 @@ local Bombergame = {
                     local physbodyComp = EntityGetFirstComponentIncludingDisabled(bomb, "PhysicsBodyComponent")
 
                     if physbodyComp then
-                        np.PhysBodySetTransform(physbodyComp, message.x, message.y, message.r, message.vx, message.vy, message.av)
+                        PhysicsComponentSetTransform(physbodyComp, message.x, message.y, message.r, message.vx, message.vy, message.av)
                     end
                 end
             end,

@@ -13,9 +13,9 @@ local ang_vel = PhysicsGetComponentAngularVelocity( bomb, phys_body )
 
 PhysicsApplyTorque( bomb, -(ang_vel * friction) )
 
-local bomb_fuse_mass = 0.05665
-local bomb_pixels = ComponentGetValue2(phys_body, "mPixelCount")
+--local bomb_fuse_mass = 0.05665
+--local bomb_pixels = ComponentGetValue2(phys_body, "mPixelCount")
 
-local anti_gravity_force = bomb_pixels * bomb_fuse_mass
+--local anti_gravity_force = bomb_pixels * bomb_fuse_mass
 
-PhysicsApplyForce(bomb, 0, -anti_gravity_force)
+--PhysicsApplyForce(bomb, 0, -anti_gravity_force)
