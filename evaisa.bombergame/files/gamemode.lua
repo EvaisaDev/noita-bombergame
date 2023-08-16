@@ -701,6 +701,9 @@ Bombergame = {
                     GamePrintImportant("Everyone died!", "It is a tie!")
                     game_finished = true
                     --world_loaded = false
+                    if(steamutils.IsOwner(lobby))then
+                        steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
+                    end
                     GameAddFlagRun("DisableExplosions")
 
                     delay.new(10 * 60, function()
@@ -731,6 +734,9 @@ Bombergame = {
                     local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
                     GamePrintImportant(player_name.." won!", "Congratulations!")
                     game_finished = true
+                    if(steamutils.IsOwner(lobby))then
+                        steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
+                    end
                     GameAddFlagRun("DisableExplosions")
 
                     delay.new(10 * 60, function()
