@@ -2,7 +2,7 @@
 
   <PhysicsBody2Component
       kill_entity_after_initialized="0" 
-      is_static="1"
+      is_static="0"
       allow_sleep="0"
       angular_damping="0"
       linear_damping="0"
