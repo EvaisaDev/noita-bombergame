@@ -167,9 +167,15 @@ TakePowerup = function(lobby, x, y)
 end
 
 GetPlayerIndex = function(lobby)
+    local player_ids = {}
     local members = steamutils.getLobbyMembers(lobby)
     for i, member in ipairs(members) do
-        if(member.id == steam.user.getSteamID())then
+        table.insert(player_ids, tonumber(tostring(member.id)))
+    end
+    table.sort(player_ids)
+    local local_player = steam.user.getSteamID()
+    for i, player_id in ipairs(player_ids) do
+        if(player_id == local_player)then
             return i
         end
     end
@@ -308,6 +314,13 @@ Bombergame = {
                 return value
             end,
 		},
+        {
+            id = "player_collisions",
+            name = "Player Collisions",
+            description = "Players block eachother from moving past",
+            type = "bool",
+            default = true
+        },  
     },
     default_data = {
     },
@@ -348,8 +361,17 @@ Bombergame = {
         if (explosive_percentage == nil) then
             explosive_percentage = 0.1
         end
-        print(tostring(explosive_percentage))
         GlobalsSetValue("bomberguy_explosive_percentage", tostring(explosive_percentage))
+
+        local player_collisions = steam.matchmaking.getLobbyData(lobby, "setting_player_collisions")
+        if (player_collisions == nil) then
+            player_collisions = "true"
+        end
+        if(player_collisions == "true")then
+            GameAddFlagRun("player_collisions")
+        else
+            GameRemoveFlagRun("player_collisions")
+        end
     end,
     enter = function(lobby)
         Bombergame.refresh(lobby)
