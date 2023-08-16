@@ -4,6 +4,7 @@ package.path = package.path .. ";./mods/evaisa.bombergame/lib/?/init.lua"
 local json = dofile("mods/evaisa.mp/lib/json.lua")
 local vector = dofile("mods/evaisa.bombergame/lib/vector.lua")
 local rng = dofile("mods/evaisa.bombergame/lib/rng.lua")
+local delay = dofile("mods/evaisa.bombergame/lib/delay.lua")
 
 game_funcs = dofile("mods/evaisa.mp/files/scripts/game_functions.lua")
 
@@ -350,6 +351,7 @@ Bombergame = {
     end,
     enter = function(lobby)
         Bombergame.refresh(lobby)
+        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
     end,
     start = function(lobby)
         GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
@@ -658,14 +660,36 @@ Bombergame = {
 
             local alive_players = GetAlivePlayers()
 
-            if(#alive_players == 0)then
-                GamePrintImportant("Everyone died!", "It is a tie!")
-                --world_loaded = false
-            elseif(#alive_players == 1)then
-                --print(tostring(alive_players[1]))
-                local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
-                GamePrintImportant(player_name.." won!", "Congratulations!")
-                --world_loaded = false
+            if(not game_finished)then
+                if(#alive_players == 0)then
+                    GamePrintImportant("Everyone died!", "It is a tie!")
+                    game_finished = true
+                    --world_loaded = false
+
+                    delay.new(10 * 60, function()
+                        StopGame()
+                        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+                    end, function(frames)
+                        if (frames % 60 == 0) then
+                            GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
+                        end
+                    end)
+                elseif(#alive_players == 1)then
+                    --print(tostring(alive_players[1]))
+                    local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
+                    GamePrintImportant(player_name.." won!", "Congratulations!")
+                    game_finished = true
+
+                    delay.new(10 * 60, function()
+                        StopGame()
+                        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+                    end, function(frames)
+                        if (frames % 60 == 0) then
+                            GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
+                        end
+                    end)
+                    --world_loaded = false
+                end
             end
         end
     end,
