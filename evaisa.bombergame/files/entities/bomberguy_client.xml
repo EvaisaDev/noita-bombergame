@@ -1,5 +1,22 @@
 <Entity name="client" tags="client,mortal,human,hittable,peasant,prey,teleportable,polymorphable_NOT" >
 
+  <PhysicsBody2Component
+      kill_entity_after_initialized="0" 
+      is_static="1"
+      allow_sleep="0"
+      angular_damping="0"
+      linear_damping="0"
+      destroy_body_if_entity_destroyed="1"
+  >
+  </PhysicsBody2Component>
+  <PhysicsShapeComponent
+      is_box="1"
+      radius_x="4"
+      radius_y="4"
+      friction="0.0"
+      restitution="0.0" >
+  </PhysicsShapeComponent>
+
   <SpriteAnimatorComponent>
   </SpriteAnimatorComponent>
 

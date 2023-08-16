@@ -210,6 +210,14 @@ local velocity = direction * speed_multipier
 
 --print(tostring(velocity))
 
+--[[
+local block_player_collisions = true
+local client_entities = EntityGetWithTag("client") or {}
+-- check if velocity will cause collision with other player in the next frame
+if(block_player_collisions)then
+
+end
+]]
 
 local character_data_component = EntityGetFirstComponentIncludingDisabled( player, "CharacterDataComponent" )
 

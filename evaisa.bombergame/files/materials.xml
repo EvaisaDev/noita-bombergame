@@ -128,5 +128,26 @@
     </Graphics>
   </CellData>
 
-
+    <CellDataChild
+        _parent="rock_static"
+        _inherit_reactions="0"
+        tags="[static],[alchemy],[solid],[earth]"
+        name="body_blocker" 
+        ui_name=""
+        wang_color="ffacab34"
+        hp="20000000"
+        durability="200000000"
+        cell_type="liquid"
+        liquid_sand="0"
+        liquid_static="1"
+        platform_type="1"
+        solid_friction="0"
+        slippery="1"   
+        show_in_creative_mode="1"
+        >
+        <Graphics
+            color="00413F24"
+            >
+        </Graphics>
+    </CellDataChild>  
 </Materials>

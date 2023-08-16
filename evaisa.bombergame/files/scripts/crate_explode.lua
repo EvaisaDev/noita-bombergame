@@ -5,5 +5,6 @@ local bomb = GetUpdatedEntityID()
 
 local bomb_x, bomb_y = EntityGetTransform( bomb )
 
-
-explosion_helper.Explode(3, 1, bomb_x, bomb_y)
+if(not GameHasFlagRun("DisableExplosions"))then
+    explosion_helper.Explode(3, 1, bomb_x, bomb_y)
+end

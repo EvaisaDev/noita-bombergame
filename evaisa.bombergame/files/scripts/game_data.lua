@@ -15,7 +15,7 @@ spawn_list = {
         can_contain_powerups = true,
     },
     {
-        weight = function() return tonumber(GlobalsGetValue("bomberguy_powerup_percentage", "0.1")) end,
+        weight = function() return tonumber(GlobalsGetValue("bomberguy_explosive_percentage", "0.1")) end,
         type = grid_types.explosive_crate,
         entity = "mods/evaisa.bombergame/files/entities/explosive_crate.xml"
     },

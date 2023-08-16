@@ -276,7 +276,17 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
                     scene = "mods/evaisa.bombergame/files/biome/scenes/box_wall.png"
                 end
 
-                LoadPixelScene(scene, visual_overlay, world_position.x, world_position.y, visual_overlay, true, true, nil, 0, true)
+                LoadPixelScene(scene, visual_overlay, world_position.x, world_position.y, "", true, true, nil, 0, true)
+
+                if(visual_overlay ~= "")then
+                    local background_entity = EntityCreateNew("background")
+                    EntityAddTag(background_entity, "background")
+                    EntityAddComponent2(background_entity, "SpriteComponent", {
+                        image_file = visual_overlay,
+                    })
+                    EntitySetTransform(background_entity, world_position.x, world_position.y)
+                    EntityApplyTransform(background_entity, world_position.x, world_position.y)
+                end
             end
         end
     end

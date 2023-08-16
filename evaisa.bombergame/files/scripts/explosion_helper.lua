@@ -2,6 +2,9 @@ local vector = dofile("mods/evaisa.bombergame/lib/vector.lua")
 local explosion_helper = {}
 
 explosion_helper.Explode = function(power, penetration, bomb_x, bomb_y, explosion_entity)
+    if(GameHasFlagRun("DisableExplosions"))then return end
+
+
     explosion_entity = explosion_entity or "mods/evaisa.bombergame/files/entities/explosion.xml"
 
     local arena_offset = 16

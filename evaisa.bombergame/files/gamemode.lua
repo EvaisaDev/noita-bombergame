@@ -14,6 +14,7 @@ local load_world = false
 local player_entity = nil
 local dead = false
 local world_loaded = false
+local world_start = false
 local game_finished = false
 local randomized_seed = true
 random = rng.new(0)
@@ -292,10 +293,10 @@ Bombergame = {
                 return true
             end,
 			name = "Explosive Probability",
-			description = "What percentage of crates should be explosive",
+			description = "The spawn probability of explosive crates",
 			type = "slider",
 			min = 0,
-			max = 1,
+			max = 2,
 			default = 0.1;
 			display_multiplier = 1,
             display_fractions = true,
@@ -347,6 +348,7 @@ Bombergame = {
         if (explosive_percentage == nil) then
             explosive_percentage = 0.1
         end
+        print(tostring(explosive_percentage))
         GlobalsSetValue("bomberguy_explosive_percentage", tostring(explosive_percentage))
     end,
     enter = function(lobby)
@@ -362,7 +364,10 @@ Bombergame = {
         load_world = false
         dead = false
         world_loaded = false
+        world_start = false
         game_finished = false
+        GameAddFlagRun("DisableExplosions")
+        delay.reset()
 
         GameSetCameraFree( false )
 
@@ -465,6 +470,10 @@ Bombergame = {
             end
             load_world = false
             world_loaded = true
+        elseif(world_loaded and not world_start)then
+            world_start = true
+            GameRemoveFlagRun("DisableExplosions")
+            print("explosions are allowed!")
         end
 
         --if(world_loaded)then
@@ -668,9 +677,25 @@ Bombergame = {
                     GamePrintImportant("Everyone died!", "It is a tie!")
                     game_finished = true
                     --world_loaded = false
+                    GameAddFlagRun("DisableExplosions")
 
                     delay.new(10 * 60, function()
+                        GameAddFlagRun("DisableExplosions")
                         StopGame()
+                        local players = EntityGetWithTag("player_unit") or {}
+                        for _, player in ipairs(players) do
+                            EntityKill(player)
+                        end
+                        local backgrounds = EntityGetWithTag("background") or {}
+                        for _, v in ipairs(backgrounds) do
+                            EntityKill(v)
+                        end
+                        for _, client in ipairs(client_entities)do
+                            EntityKill(client)
+                        end
+                        for _, powerup in ipairs(EntityGetWithTag("powerup") or {})do
+                            EntityKill(powerup)
+                        end
                         LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
                     end, function(frames)
                         if (frames % 60 == 0) then
@@ -682,9 +707,25 @@ Bombergame = {
                     local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
                     GamePrintImportant(player_name.." won!", "Congratulations!")
                     game_finished = true
+                    GameAddFlagRun("DisableExplosions")
 
                     delay.new(10 * 60, function()
+                        GameAddFlagRun("DisableExplosions")
                         StopGame()
+                        local players = EntityGetWithTag("player_unit") or {}
+                        for _, player in ipairs(players) do
+                            EntityKill(player)
+                        end
+                        local backgrounds = EntityGetWithTag("background") or {}
+                        for _, v in ipairs(backgrounds) do
+                            EntityKill(v)
+                        end
+                        for _, client in ipairs(client_entities)do
+                            EntityKill(client)
+                        end
+                        for _, powerup in ipairs(EntityGetWithTag("powerup") or {})do
+                            EntityKill(powerup)
+                        end
                         LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
                     end, function(frames)
                         if (frames % 60 == 0) then
@@ -830,6 +871,12 @@ Bombergame = {
                 end
 
                 EntityApplyTransform(client, message.x, message.y, message.r, message.w, message.h)
+
+                local physics_body = EntityGetFirstComponentIncludingDisabled( client, "PhysicsBody2Component" )
+                if(physics_body ~= nil)then
+                    local body_x, body_y = GamePosToPhysicsPos(message.x, message.y)
+                    PhysicsComponentSetTransform(physics_body, body_x, body_y, 0, 0, 0)
+                end
 
                 local character_data_component = EntityGetFirstComponentIncludingDisabled( client, "CharacterDataComponent" )
 
