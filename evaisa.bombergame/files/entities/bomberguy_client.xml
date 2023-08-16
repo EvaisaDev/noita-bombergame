@@ -1,5 +1,6 @@
 <Entity name="client" tags="client,mortal,human,hittable,peasant,prey,teleportable,polymorphable_NOT" >
 
+<!--
   <PhysicsBody2Component
       kill_entity_after_initialized="0" 
       is_static="0"
@@ -16,7 +17,7 @@
       material="body_blocker"
       >
   </PhysicsImageShapeComponent>
-
+-->
   <SpriteAnimatorComponent>
   </SpriteAnimatorComponent>
 

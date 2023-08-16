@@ -210,14 +210,26 @@ local velocity = direction * speed_multipier
 
 --print(tostring(velocity))
 
---[[
+
 local block_player_collisions = true
 local client_entities = EntityGetWithTag("client") or {}
 -- check if velocity will cause collision with other player in the next frame
+local min_distance = 3
 if(block_player_collisions)then
-
+    for k, v in ipairs(client_entities) do
+        local x2, y2, r2, w2, h2 = EntityGetTransform(v)
+        local distance = math.sqrt((x - x2)^2 + (y - y2)^2)
+        if(distance < min_distance)then
+            -- if velocity is towards other player, block it
+            local direction_to_other_player = vector.new(x2 - x, y2 - y):normalize()
+            local dot = direction_to_other_player:dot(velocity)	
+            if(dot > 0)then
+                velocity = vector.new(0, 0)
+            end
+        end
+    end
 end
-]]
+
 
 local character_data_component = EntityGetFirstComponentIncludingDisabled( player, "CharacterDataComponent" )
 
