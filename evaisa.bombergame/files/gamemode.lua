@@ -170,13 +170,14 @@ GetPlayerIndex = function(lobby)
     local player_ids = {}
     local members = steamutils.getLobbyMembers(lobby)
     for i, member in ipairs(members) do
-        table.insert(player_ids, tonumber(tostring(member.id)))
+        table.insert(player_ids, tostring(member.id))
     end
-    table.sort(player_ids)
+    table.sort(player_ids, function(a, b) return a < b end)
     local local_player = tostring(steam.user.getSteamID())
     for i, player_id in ipairs(player_ids) do
-        if(tostring(player_id) == local_player)then
-            GamePrint("player index: "..tostring(i))
+        --print(player_id)
+        if(player_id == local_player)then
+            --GamePrint("player index: "..tostring(i))
             return i
         end
     end
