@@ -447,7 +447,10 @@ Bombergame = {
 
     end,
     update = function(lobby)
+        delay.update()
         if(load_world)then
+            GamePrint("loading world with seed: "..tostring(seed))
+            print("loading world with seed: "..tostring(seed))
             local arena_size_x = tonumber(GlobalsGetValue("bomberguy_arena_size_x", "11"))
             local arena_size_y = tonumber(GlobalsGetValue("bomberguy_arena_size_y", "11"))
             world_gen:generate(lobby, vector.new(arena_size_x, arena_size_y), tonumber(GlobalsGetValue("bomberguy_crate_percentage", "0.85")), tonumber(GlobalsGetValue("bomberguy_powerup_percentage", "0.1")), tonumber(steam.matchmaking.getLobbyData(lobby, "spawnpoint_count") or 32))

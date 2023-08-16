@@ -321,9 +321,9 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
     --print(grid_test_string)
     local data = table.concat(png.output)
 
-    local file = io.open("temptemp/arena_map.png", "wb")
+    --[[local file = io.open("temptemp/arena_map.png", "wb")
     file:write(data)
-    file:close()
+    file:close()]]
 end
 
 world_gen.GetSpawnPoint = function(self, index)
