@@ -63,7 +63,7 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
     arena_size = arena_size + 2
 
     LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
-
+    RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
     --SetRandomSeed(seed, seed)
     -- create grid
     self.spawn_points = {}
@@ -276,9 +276,9 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
                     scene = "mods/evaisa.bombergame/files/biome/scenes/box_wall.png"
                 end
 
-                LoadPixelScene(scene, visual_overlay, world_position.x, world_position.y, "", true, true, nil, 0, true)
+                LoadPixelScene(scene, visual_overlay, world_position.x, world_position.y, visual_overlay, true, true, nil, 0, true)
 
-                if(visual_overlay ~= "")then
+                --[[if(visual_overlay ~= "")then
                     local background_entity = EntityCreateNew("background")
                     EntityAddTag(background_entity, "background")
                     EntityAddComponent2(background_entity, "SpriteComponent", {
@@ -286,7 +286,7 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
                     })
                     EntitySetTransform(background_entity, world_position.x, world_position.y)
                     EntityApplyTransform(background_entity, world_position.x, world_position.y)
-                end
+                end]]
             end
         end
     end

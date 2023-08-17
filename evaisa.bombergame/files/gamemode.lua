@@ -197,7 +197,7 @@ end
 Bombergame = {
     id = "bombergame",
     name = "Bombergame",
-    version = 0.11,
+    version = 0.2,
     allow_in_progress_joining = false,
     settings = {
         {
@@ -378,6 +378,7 @@ Bombergame = {
     enter = function(lobby)
         Bombergame.refresh(lobby)
         LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
     end,
     start = function(lobby)
         GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
@@ -724,6 +725,7 @@ Bombergame = {
                             EntityKill(powerup)
                         end
                         LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+                        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
                     end, function(frames)
                         if (frames % 60 == 0) then
                             GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
@@ -757,6 +759,7 @@ Bombergame = {
                             EntityKill(powerup)
                         end
                         LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+                        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
                     end, function(frames)
                         if (frames % 60 == 0) then
                             GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
@@ -892,12 +895,17 @@ Bombergame = {
             player_update = function(lobby, event, message, user)
                 local client = EntityGetWithName("player_"..tostring(user))
                 if(client == 0 or client == nil)then
+                    local gui = GuiCreate()
+                    GuiStartFrame(gui)
+
                     client = EntityLoad("mods/evaisa.bombergame/files/entities/bomberguy_client.xml", message.x, message.y)
                     EntitySetName(client, "player_"..tostring(user))
                     local usernameSprite = EntityGetFirstComponentIncludingDisabled(client, "SpriteComponent", "username")
                     local name = steamutils.getTranslatedPersonaName(user)
+                    local offset = GuiGetTextDimensions( gui, name, 0.7 )
+                    GuiDestroy(gui)
                     ComponentSetValue2(usernameSprite, "text", name)
-                    ComponentSetValue2(usernameSprite, "offset_x", string.len(name) * (1.8))
+                    ComponentSetValue2(usernameSprite, "offset_x", -offset / 2)
                 end
 
                 EntityApplyTransform(client, message.x, message.y, message.r, message.w, message.h)
