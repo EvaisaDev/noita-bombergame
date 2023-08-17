@@ -30,6 +30,9 @@ local max_active_bombs = tonumber(GlobalsGetValue("bomberguy_max_active_bombs", 
 local bomb_collision = tonumber(GlobalsGetValue("bomberguy_bomb_collision", "1"))
 local box_penetration = tonumber(GlobalsGetValue("bomberguy_box_penetration", "0"))
 local bomb_power = tonumber(GlobalsGetValue("bomberguy_bomb_power", "1"))
+local kick_stacks = tonumber(GlobalsGetValue("bomberguy_kick_stacks", "0"))
+
+kick_stacks = 1
 
 ------------------------------------------------
 
@@ -204,6 +207,8 @@ end
 
 if(direction:len() > 0 and bombing == false)then
     last_direction = direction
+    GlobalsSetValue("bomberguy_last_direction_x", tostring(last_direction.x))
+    GlobalsSetValue("bomberguy_last_direction_y", tostring(last_direction.y))
 end
 
 local velocity = direction * speed_multipier
@@ -239,6 +244,41 @@ end
 
 local active_bomb_count = #(EntityGetWithTag("player_bomb") or {})
 
+if(bombing == false)then
+    if(KeyPressed(Keys.Kick))then
+        GameAddFlagRun("local_user_kicked_bomb")
+        if(kick_stacks > 0)then
+            local direction_x = last_direction.x
+            local direction_y = last_direction.y
+            local x = x
+            local y = y
+            local kick_radius = 10
+            local kick_power = 20 * kick_stacks
+            local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
+            for k, v in ipairs(bombs_nearby)do
+                --GameShootProjectile(player, x, y, x + (direction_x * kick_power), y + (direction_y * kick_power), v, true)
+
+                local ids = PhysicsBodyIDGetFromEntity(v)
+                for k2, v2 in ipairs(ids) do
+                    PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
+                    if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
+                        PhysicsBodyIDSetGravityScale(v2, 0)
+                    end
+                end
+            end
+        end
+    end
+end
+
+--[[local bombs_nearby = EntityGetWithTag("local_bomb") or {}
+for k, v in ipairs(bombs_nearby)do
+    local ids = PhysicsBodyIDGetFromEntity(v)
+    for k2, v2 in ipairs(ids) do
+        if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
+            PhysicsBodyIDSetGravityScale(v2, 0)
+        end
+    end
+end]]
 
 if(bombing == false and KeyPressed(Keys.Bomb) and active_bomb_count < max_active_bombs and GameGetFrameNum() > last_bomb_frame + bomb_cooldown)then
 
@@ -286,6 +326,7 @@ if(bombing == true and GameGetFrameNum() > (last_bomb_frame + bomb_throw_frame))
     end
 
     EntityAddTag(bomb, "player_bomb")
+    EntityAddTag(bomb, "local_bomb")
 
     local custom_id = bomb + GameGetFrameNum() + bomb_location_x + bomb_location_y
 

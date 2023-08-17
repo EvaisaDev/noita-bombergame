@@ -17,6 +17,45 @@ local world_loaded = false
 local world_start = false
 local game_finished = false
 local randomized_seed = true
+
+local player_powerups = {}
+PlayerHasPowerup = function(user, id)
+    for k, v in ipairs(player_powerups[tostring(user)] or {})do
+        if(v == id)then
+            return true
+        end
+    end
+    return false
+end
+PlayerGetPowerupStacks = function(user, id)
+    local count = 0
+    for k, v in ipairs(player_powerups[tostring(user)] or {})do
+        if(v == id)then
+            count = count + 1
+        end
+    end
+    return count
+end
+
+local self_powerups = {}
+SelfHasPowerup = function(id)
+    for k, v in ipairs(self_powerups)do
+        if(v == id)then
+            return true
+        end
+    end
+    return false
+end
+SelfGetPowerupStacks = function(id)
+    local count = 0
+    for k, v in ipairs(self_powerups)do
+        if(v == id)then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 random = rng.new(0)
 
 debugging = false
@@ -156,6 +195,7 @@ TakePowerup = function(lobby, x, y)
                     if(players ~= nil and players[1] ~= nil)then
                         local player = players[1]
                         powerup_data.pickup(player, x * 16 + 8, y * 16 + 8)
+                        table.insert(self_powerups, powerup)
                     end
                 end
             end
@@ -185,13 +225,9 @@ GetPlayerIndex = function(lobby)
 end
 
 ResetPowerupData = function()
-    GlobalsSetValue("bomberguy_throw_strength", "1")
-    GlobalsSetValue("bomberguy_speed", "60")
-    GlobalsSetValue("bomberguy_bomb_cooldown", "30")
-    GlobalsSetValue("bomberguy_max_active_bombs", "1")
-    GlobalsSetValue("bomberguy_bomb_collision", "1")
-    GlobalsSetValue("bomberguy_bomb_power", "1")
-    GlobalsSetValue("bomberguy_box_penetration", "0")
+    for k, v in ipairs(powerup_list)do
+        v.reset()
+    end
 end
 
 Bombergame = {
@@ -391,6 +427,7 @@ Bombergame = {
         world_start = false
         game_finished = false
         GameAddFlagRun("DisableExplosions")
+        GameRemoveFlagRun("local_user_kicked_bomb")
         delay.reset()
 
         GameSetCameraFree( false )
@@ -632,6 +669,14 @@ Bombergame = {
                     }, steamutils.messageTypes.OtherPlayers, lobby, false, true)
 
 
+                    if(GameHasFlagRun("local_user_kicked_bomb"))then
+                        local direction_x = tonumber(GlobalsGetValue("bomberguy_last_direction_x", "0"))
+                        local direction_y = tonumber(GlobalsGetValue("bomberguy_last_direction_y", "1"))
+                        steamutils.send("player_kick", {x = x, y = y, direction_x = direction_x, direction_y = direction_y}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
+
+                    end
+
+
                     if(GameHasFlagRun("took_damage"))then
                         local info = GlobalsGetValue("last_damage_details", "")
                         if(info ~= nil and info ~= "")then
@@ -695,6 +740,10 @@ Bombergame = {
             --game_funcs.RenderAboveHeadMarkers(client_entities, 0, 34)
 
             local alive_players = GetAlivePlayers()
+
+            if true then
+                return
+            end
 
             if(not game_finished)then
                 if(#alive_players == 0)then
@@ -839,6 +888,30 @@ Bombergame = {
 
                 LoadPowerupEntity(id, powerup, x, y)
             end,
+            player_kick = function(lobby, event, message, user)
+                if(true--[[PlayerHasPowerup(user, powerup_types.kick_bombs)]])then
+                    local client = EntityGetWithName("player_"..tostring(user))
+                    if(client ~= 0 and client ~= nil)then
+                        local direction_x = message.direction_x
+                        local direction_y = message.direction_y
+                        local x = message.x
+                        local y = message.y
+                        local stacks = 1--PlayerGetPowerupStacks(user, powerup_types.kick_bombs)
+                        local kick_radius = 10
+                        local kick_power = 10 * stacks
+                        local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
+                        for k, v in ipairs(bombs_nearby)do
+                            local ids = PhysicsBodyIDGetFromEntity(v)
+                            for k2, v2 in ipairs(ids) do
+                                if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
+                                    PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
+                                    PhysicsBodyIDSetGravityScale(v2, 0)
+                                end
+                            end
+                        end
+                    end
+                end
+            end,
             bomb_placed = function(lobby, event, message, user)
                 --[[
                     {
@@ -899,10 +972,10 @@ Bombergame = {
                     EntitySetName(client, "player_"..tostring(user))
                     local usernameSprite = EntityGetFirstComponentIncludingDisabled(client, "SpriteComponent", "username")
                     local name = steamutils.getTranslatedPersonaName(user)
-                    local offset = GuiGetTextDimensions( gui, name, 0.7 )
+                    local offset = GuiGetTextDimensions( gui, name, 0.7 ) * 1.4
                     GuiDestroy(gui)
                     ComponentSetValue2(usernameSprite, "text", name)
-                    ComponentSetValue2(usernameSprite, "offset_x", -offset / 2)
+                    ComponentSetValue2(usernameSprite, "offset_x", offset / 2)
                 end
 
                 EntityApplyTransform(client, message.x, message.y, message.r, message.w, message.h)
@@ -982,6 +1055,11 @@ Bombergame = {
             end,
             powerup_taken = function(lobby, event, message, user)
                 print("powerup taken")
+                if(player_powerups[tostring(user)] == nil)then
+                    player_powerups[tostring(user)] = {}
+                end
+
+                table.insert(player_powerups[tostring(user)], message.id)
                 if(message.id)then
                     local powerup = EntityGetWithName("powerup_"..tostring(message.id))
                     if(powerup ~= nil)then
