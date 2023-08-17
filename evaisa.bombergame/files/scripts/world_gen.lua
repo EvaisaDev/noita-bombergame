@@ -48,6 +48,25 @@ local function GetWeightedItem(table)
     end
 end
 
+world_gen.clear_scene = function(self)
+    LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
+    local backgrounds = {
+        "mods/evaisa.bombergame/files/biome/scenes/steel_wall_edge_smooth.png",
+        "mods/evaisa.bombergame/files/biome/scenes/steel_wall_edge.png",
+        "mods/evaisa.bombergame/files/biome/scenes/steel_wall_edge_br.png",
+        "mods/evaisa.bombergame/files/biome/scenes/steel_wall_edge_bl.png",
+    }
+    local steps = 1024 / 16
+    for x = 0, steps do
+        for y = 0, steps do
+            local world_x, world_y = x * 16, y * 16
+            for k, v in ipairs(backgrounds)do
+                RemovePixelSceneBackgroundSprite( v, world_x, world_y )
+            end
+        end
+    end
+end
+
 world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_density, spawn_count)
     --print(tostring(lobby))
     local destroyed_boxes = GetDestroyedBoxes(lobby)
@@ -62,8 +81,7 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
 
     arena_size = arena_size + 2
 
-    LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
-    RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
+    world_gen.clear_scene(self)
     --SetRandomSeed(seed, seed)
     -- create grid
     self.spawn_points = {}

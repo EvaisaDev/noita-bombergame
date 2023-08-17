@@ -377,8 +377,7 @@ Bombergame = {
     end,
     enter = function(lobby)
         Bombergame.refresh(lobby)
-        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
-        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
+        world_gen:clear_scene()
     end,
     start = function(lobby)
         GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
@@ -724,8 +723,7 @@ Bombergame = {
                         for _, powerup in ipairs(EntityGetWithTag("powerup") or {})do
                             EntityKill(powerup)
                         end
-                        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
-                        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
+                        world_gen:clear_scene()
                     end, function(frames)
                         if (frames % 60 == 0) then
                             GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
@@ -758,8 +756,7 @@ Bombergame = {
                         for _, powerup in ipairs(EntityGetWithTag("powerup") or {})do
                             EntityKill(powerup)
                         end
-                        LoadPixelScene("mods/evaisa.bombergame/files/biome/scenes/clear.png", "", 0, 0, "", true, true, nil, 0, true)
-                        RemovePixelSceneBackgroundSprites( 0, 0, 1024, 1024 )
+                        world_gen:clear_scene()
                     end, function(frames)
                         if (frames % 60 == 0) then
                             GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
