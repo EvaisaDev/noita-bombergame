@@ -673,7 +673,7 @@ Bombergame = {
                         local direction_x = tonumber(GlobalsGetValue("bomberguy_last_direction_x", "0"))
                         local direction_y = tonumber(GlobalsGetValue("bomberguy_last_direction_y", "1"))
                         steamutils.send("player_kick", {x = x, y = y, direction_x = direction_x, direction_y = direction_y}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
-
+                        GameRemoveFlagRun("local_user_kicked_bomb")
                     end
 
 
@@ -892,6 +892,7 @@ Bombergame = {
                 if(true--[[PlayerHasPowerup(user, powerup_types.kick_bombs)]])then
                     local client = EntityGetWithName("player_"..tostring(user))
                     if(client ~= 0 and client ~= nil)then
+                        GamePrint("Player kicked")
                         local direction_x = message.direction_x
                         local direction_y = message.direction_y
                         local x = message.x
