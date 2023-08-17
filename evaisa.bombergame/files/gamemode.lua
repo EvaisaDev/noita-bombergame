@@ -899,14 +899,14 @@ Bombergame = {
                         local y = message.y
                         local stacks = 1--PlayerGetPowerupStacks(user, powerup_types.kick_bombs)
                         local kick_radius = 10
-                        local kick_power = 10 * stacks
+                        local kick_power = 20 * stacks
                         local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
                         for k, v in ipairs(bombs_nearby)do
                             GamePrint("found bomb: "..tostring(v))
                             local ids = PhysicsBodyIDGetFromEntity(v)
                             for k2, v2 in ipairs(ids) do
+                                PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
                                 if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
-                                    PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
                                     PhysicsBodyIDSetGravityScale(v2, 0)
                                 end
                             end
