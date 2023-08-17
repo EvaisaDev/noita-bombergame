@@ -902,6 +902,7 @@ Bombergame = {
                         local kick_power = 10 * stacks
                         local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
                         for k, v in ipairs(bombs_nearby)do
+                            GamePrint("found bomb: "..tostring(v))
                             local ids = PhysicsBodyIDGetFromEntity(v)
                             for k2, v2 in ipairs(ids) do
                                 if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
