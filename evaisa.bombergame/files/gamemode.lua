@@ -233,7 +233,7 @@ end
 Bombergame = {
     id = "bombergame",
     name = "Bombergame",
-    version = 0.2,
+    version = 0.31,
     allow_in_progress_joining = false,
     settings = {
         {
@@ -741,9 +741,6 @@ Bombergame = {
 
             local alive_players = GetAlivePlayers()
 
-            if true then
-                return
-            end
 
             if(not game_finished)then
                 if(#alive_players == 0)then
@@ -889,20 +886,18 @@ Bombergame = {
                 LoadPowerupEntity(id, powerup, x, y)
             end,
             player_kick = function(lobby, event, message, user)
-                if(true--[[PlayerHasPowerup(user, powerup_types.kick_bombs)]])then
+                if(PlayerHasPowerup(user, powerup_types.kick_bombs))then
                     local client = EntityGetWithName("player_"..tostring(user))
                     if(client ~= 0 and client ~= nil)then
-                        GamePrint("Player kicked")
                         local direction_x = message.direction_x
                         local direction_y = message.direction_y
                         local x = message.x
                         local y = message.y
-                        local stacks = 1--PlayerGetPowerupStacks(user, powerup_types.kick_bombs)
+                        local stacks = PlayerGetPowerupStacks(user, powerup_types.kick_bombs)
                         local kick_radius = 10
                         local kick_power = 20 * stacks
                         local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
                         for k, v in ipairs(bombs_nearby)do
-                            GamePrint("found bomb: "..tostring(v))
                             local ids = PhysicsBodyIDGetFromEntity(v)
                             for k2, v2 in ipairs(ids) do
                                 PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)

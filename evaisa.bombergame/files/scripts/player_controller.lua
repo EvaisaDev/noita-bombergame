@@ -32,8 +32,6 @@ local box_penetration = tonumber(GlobalsGetValue("bomberguy_box_penetration", "0
 local bomb_power = tonumber(GlobalsGetValue("bomberguy_bomb_power", "1"))
 local kick_stacks = tonumber(GlobalsGetValue("bomberguy_kick_stacks", "0"))
 
-kick_stacks = 1
-
 ------------------------------------------------
 
 
@@ -245,25 +243,23 @@ end
 local active_bomb_count = #(EntityGetWithTag("player_bomb") or {})
 
 if(bombing == false)then
-    if(KeyPressed(Keys.Kick))then
+    if(KeyPressed(Keys.Kick) and kick_stacks > 0)then
         GameAddFlagRun("local_user_kicked_bomb")
-        if(kick_stacks > 0)then
-            local direction_x = last_direction.x
-            local direction_y = last_direction.y
-            local x = x
-            local y = y
-            local kick_radius = 10
-            local kick_power = 20 * kick_stacks
-            local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
-            for k, v in ipairs(bombs_nearby)do
-                --GameShootProjectile(player, x, y, x + (direction_x * kick_power), y + (direction_y * kick_power), v, true)
+        local direction_x = last_direction.x
+        local direction_y = last_direction.y
+        local x = x
+        local y = y
+        local kick_radius = 10
+        local kick_power = 20 * kick_stacks
+        local bombs_nearby = EntityGetInRadiusWithTag(x, y, kick_radius, "local_bomb")
+        for k, v in ipairs(bombs_nearby)do
+            --GameShootProjectile(player, x, y, x + (direction_x * kick_power), y + (direction_y * kick_power), v, true)
 
-                local ids = PhysicsBodyIDGetFromEntity(v)
-                for k2, v2 in ipairs(ids) do
-                    PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
-                    if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
-                        PhysicsBodyIDSetGravityScale(v2, 0)
-                    end
+            local ids = PhysicsBodyIDGetFromEntity(v)
+            for k2, v2 in ipairs(ids) do
+                PhysicsBodyIDApplyForce(v2, (direction_x * kick_power), (direction_y * kick_power), x, y)
+                if(PhysicsBodyIDGetGravityScale(v2) ~= 0)then
+                    PhysicsBodyIDSetGravityScale(v2, 0)
                 end
             end
         end
