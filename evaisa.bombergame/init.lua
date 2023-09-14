@@ -11,6 +11,12 @@ end
 ModMagicNumbersFileAdd("mods/evaisa.bombergame/files/magic.xml")
 ModMaterialsFileAdd("mods/evaisa.bombergame/files/materials.xml")
 
+function OnWorldPreUpdate()
+    if(not ModIsEnabled("evaisa.mp"))then
+        GamePrint("This mod requires Noita Online to be enabled! WEEWOO")
+    end
+end
+
 function OnPlayerSpawned(player)
     --GlobalsSetValue("bomberguy_bomb_collision", "0")
     --GlobalsSetValue("bomberguy_bomb_power", "3")
