@@ -1,7 +1,9 @@
 # Bomberminä
 **A online PvP bomberguy gamemode for Noita**  
 This is a bomberman clone written for Noita using my Noita Online framework.  
-It requires [Noita Online](https://github.com/EvaisaDev/noita-online) to function.  
+
+It requires [Noita Online](https://github.com/EvaisaDev/noita-online) to function.   
+It also requires Noita Beta branch.
 
 *Features:*
 - Lobby settings for map size, powerups percentage, etc.
