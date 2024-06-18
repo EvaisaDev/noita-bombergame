@@ -309,48 +309,48 @@ world_gen.generate = function(self, lobby, arena_size, crate_density, powerup_de
         end
     end
 
-
-    local grid_test_string = ""
-
-    local encode = require("pngencoder")
-
-    local png = encode(arena_size.x * 3, arena_size.y * 3)
-
-    for y = 1, arena_size.y do
-        for i = 1, 3 do
-            local rowPixels = {}
-
-            for x = 1, arena_size.x do
-                local color = spawn_colors[self.arena_grid[x][y]]
-                local powerup = self.powerup_positions[x][y]
-
-                for j = 1, 3 do
-                    if(color)then
-                        if(powerup ~= powerup_types.none and i == 2 and j == 2)then
-                            local powerup_color = powerup_colors[powerup]
-                            table.insert(rowPixels, {powerup_color[1], powerup_color[2], powerup_color[3]})
-                        else
-                            table.insert(rowPixels, {color[1], color[2], color[3]})
-                        end
-                    else
-                        table.insert(rowPixels, {0xff, 0, 0xff})
-                    end
-                end
-            end
-
-            -- Write the entire row to the png
-            for _, pixel in ipairs(rowPixels) do
-                png:write {pixel[1], pixel[2], pixel[3]}
-            end
-        end
-        grid_test_string = grid_test_string .. "\n"
-    end
-
-    --print(grid_test_string)
-    local data = table.concat(png.output)   
-    local file = io.open("temptemp/arena_map.png", "wb")
-    file:write(data)
-    file:close()
+    
+--    local grid_test_string = ""
+--
+--    local encode = require("pngencoder")
+--
+--    local png = encode(arena_size.x * 3, arena_size.y * 3)
+--
+--    for y = 1, arena_size.y do
+--        for i = 1, 3 do
+--            local rowPixels = {}
+--
+--            for x = 1, arena_size.x do
+--                local color = spawn_colors[self.arena_grid[x][y]]
+--                local powerup = self.powerup_positions[x - 1][y - 1]
+--
+--                for j = 1, 3 do
+--                    if(color)then
+--                        if(powerup ~= powerup_types.none and i == 2 and j == 2)then
+--                            local powerup_color = powerup_colors[powerup]
+--                            table.insert(rowPixels, {powerup_color[1], powerup_color[2], powerup_color[3]})
+--                        else
+--                            table.insert(rowPixels, {color[1], color[2], color[3]})
+--                        end
+--                    else
+--                        table.insert(rowPixels, {0xff, 0, 0xff})
+--                    end
+--                end
+--            end
+--
+--            -- Write the entire row to the png
+--            for _, pixel in ipairs(rowPixels) do
+--                png:write {pixel[1], pixel[2], pixel[3]}
+--            end
+--        end
+--        grid_test_string = grid_test_string .. "\n"
+--    end
+--
+--    --print(grid_test_string)
+--    local data = table.concat(png.output)   
+--    local file = io.open("temptemp/arena_map.png", "wb")
+--    file:write(data)
+--    file:close()
 end
 
 world_gen.GetSpawnPoint = function(self, index)
