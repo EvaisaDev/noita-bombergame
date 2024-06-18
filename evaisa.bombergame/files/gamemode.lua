@@ -134,6 +134,8 @@ end
 GetPowerup = function(taken_powerups, x, y)
     if(world_gen.powerup_positions[x] ~= nil)then
         if(world_gen.powerup_positions[x][y] ~= nil and world_gen.powerup_positions[x][y] ~= powerup_types.none)then
+            print("powerup at " .. tostring(x) .. ", " .. tostring(y) .. " type: " .. tostring(world_gen.powerup_positions[x][y]))
+            
             if(not GetPowerupTaken(taken_powerups, x, y))then
                 return world_gen.powerup_positions[x][y]
             end
@@ -180,7 +182,7 @@ TakePowerup = function(lobby, x, y)
     local powerup = GetPowerup(taken_powerups, x, y)
     local id = nil
     if(powerup ~= nil)then
-        if(steamutils.IsOwner(lobby))then
+        if(steamutils.IsOwner())then
             AddTakenPowerup(lobby, x, y)
         end
         local powerup_id = GetSpawnedPowerup(GetSpawnedPowerups(lobby), x, y)
@@ -416,101 +418,103 @@ Bombergame = {
         world_gen:clear_scene()
     end,
     start = function(lobby)
-        GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
-        GlobalsSetValue("bombergame_current_bombs", "[]")
-        ResetPowerupData()
-        
-        load_scene = false
-        load_world = false
-        dead = false
-        world_loaded = false
-        world_start = false
-        game_finished = false
-        GameAddFlagRun("DisableExplosions")
-        GameRemoveFlagRun("local_user_kicked_bomb")
-        delay.reset()
-
-        GameSetCameraFree( false )
-
-
-
-        if(steamutils.IsOwner(lobby))then
-            ClearDestroyedBoxes(lobby)
-            ClearTakenPowerups(lobby)
-            ClearSpawnedPowerups(lobby)
-            steam.matchmaking.setLobbyData(lobby, "dead_players", "{}")
-        end
-
-        local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
-        if(dead_players_data == nil or dead_players_data == "")then
-            dead_players_data = "{}"
-        end
-
-        local dead_players = json.parse(dead_players_data)
-
-        local local_player = steam.user.getSteamID()
-
-        print(dead_players_data)
-
-        if(dead_players[tostring(local_player)])then
-            dead = true
-            GameSetCameraFree( true )
-        end
-
-        
-        local seed = tonumber(steam.matchmaking.getLobbyData(lobby, "seed") or 1)
-
-        if(randomized_seed and steamutils.IsOwner(lobby))then
-            local a, b, c, d, e, f = GameGetDateAndTimeLocal()
-            SetRandomSeed(GameGetFrameNum() + a + b + c + d + e + f+ 235123, GameGetFrameNum() + a + b + c + d + e + f + 325325)
-            --steam.matchmaking.setLobbyData(lobby, "seed", tostring(Random(1, 1000000000)))
-            seed = Random(1, 1000000000)
-            steam.matchmaking.setLobbyData(lobby, "rng_seed", tostring(seed))
-            print("randomized seed")
+        delay.new(60, function()
+            GlobalsSetValue("bomberguy_destroyed_boxes", "[]")
+            GlobalsSetValue("bombergame_current_bombs", "[]")
+            ResetPowerupData()
             
-            steam.matchmaking.setLobbyData(lobby, "spawnpoint_count", tostring(steamutils.getPlayerCount(lobby, false)))
-        end
+            load_scene = false
+            load_world = false
+            dead = false
+            world_loaded = false
+            world_start = false
+            game_finished = false
+            GameAddFlagRun("DisableExplosions")
+            GameRemoveFlagRun("local_user_kicked_bomb")
+            delay.reset()
+
+            GameSetCameraFree( false )
 
 
-        if(randomized_seed)then
-            seed = tonumber(steam.matchmaking.getLobbyData(lobby, "rng_seed") or 1)
-        end
-       -- SetWorldSeed( seed )
 
-        random = rng.new(seed)
-        print("seed: "..tostring(seed))
-
-        --SetRandomSeed(0, 0)
-
-        -- kill player entity
-        local players = EntityGetWithTag("player_unit")
-        for _, player in ipairs(players) do
-            EntityKill(player)
-        end
-
-        -- spawn player entity
-        if(not dead)then
-            player_entity = EntityLoad("mods/evaisa.bombergame/files/entities/bomberguy.xml", 0, 0)
-            game_funcs.SetPlayerEntity(player_entity)
-            np.RegisterPlayerEntityId(player_entity)
-        end
-
-        --BiomeMapLoad_KeepPlayer("mods/evaisa.bombergame/files/scripts/biomes/map_arena.lua", "mods/evaisa.bombergame/files/biome/scenes.xml")
-
-
-        for k, v in ipairs(EntityGetWithTag("cleanup_mark") or {})do
-            local lua_components = EntityGetComponent(v, "LuaComponent") or {}
-            for k2, v2 in ipairs(lua_components)do
-                ComponentSetValue2(v2, "execute_on_removed", false)
-                EntityRemoveComponent(v, v2)
+            if(steamutils.IsOwner())then
+                ClearDestroyedBoxes(lobby)
+                ClearTakenPowerups(lobby)
+                ClearSpawnedPowerups(lobby)
+                steam.matchmaking.setLobbyData(lobby, "dead_players", "{}")
+                print("cleared deadplayer data")
             end
-            EntityKill(v)
-        end
-        
 
-        load_world = true
-        
+            local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
+            if(dead_players_data == nil or dead_players_data == "")then
+                dead_players_data = "{}"
+            end
 
+            local dead_players = json.parse(dead_players_data)
+
+            local local_player = steam.user.getSteamID()
+
+            print(dead_players_data)
+
+            if(dead_players[tostring(local_player)])then
+                dead = true
+                GameSetCameraFree( true )
+            end
+            
+            seed = tonumber(steam.matchmaking.getLobbyData(lobby, "seed") or 1)
+
+            if(randomized_seed and steamutils.IsOwner())then
+                print("randomizing seed")
+                local a, b, c, d, e, f = GameGetDateAndTimeLocal()
+                SetRandomSeed(GameGetFrameNum() + a + b + c + d + e + f+ 235123, GameGetFrameNum() + a + b + c + d + e + f + 325325)
+                --steam.matchmaking.setLobbyData(lobby, "seed", tostring(Random(1, 1000000000)))
+                seed = Random(1, 1000000000)
+                steam.matchmaking.setLobbyData(lobby, "rng_seed", tostring(seed))
+                print("randomized seed")
+                
+                steam.matchmaking.setLobbyData(lobby, "spawnpoint_count", tostring(steamutils.getPlayerCount(lobby, false, true)))
+            end
+
+
+            if(randomized_seed)then
+                seed = tonumber(steam.matchmaking.getLobbyData(lobby, "rng_seed") or 1)
+            end
+        -- SetWorldSeed( seed )
+
+            random = rng.new(seed)
+            print("seed: "..tostring(seed))
+
+            --SetRandomSeed(0, 0)
+
+            -- kill player entity
+            local players = EntityGetWithTag("player_unit")
+            for _, player in ipairs(players) do
+                EntityKill(player)
+            end
+
+            -- spawn player entity
+            if(not dead)then
+                player_entity = EntityLoad("mods/evaisa.bombergame/files/entities/bomberguy.xml", 0, 0)
+                game_funcs.SetPlayerEntity(player_entity)
+                np.RegisterPlayerEntityId(player_entity)
+            end
+
+            --BiomeMapLoad_KeepPlayer("mods/evaisa.bombergame/files/scripts/biomes/map_arena.lua", "mods/evaisa.bombergame/files/biome/scenes.xml")
+
+
+            for k, v in ipairs(EntityGetWithTag("cleanup_mark") or {})do
+                local lua_components = EntityGetComponent(v, "LuaComponent") or {}
+                for k2, v2 in ipairs(lua_components)do
+                    ComponentSetValue2(v2, "execute_on_removed", false)
+                    EntityRemoveComponent(v, v2)
+                end
+                EntityKill(v)
+            end
+            
+
+            load_world = true
+            
+        end)
     end,
     update = function(lobby)
         delay.update()
@@ -574,7 +578,7 @@ Bombergame = {
                 local box_cell = {math.floor(v.x / 16), math.floor(v.y / 16)}
                 steamutils.send("box_destroyed", box_cell, steamutils.messageTypes.OtherPlayers, lobby, true, true)
                 -- check if box contains powerup
-                if(steamutils.IsOwner(lobby))then
+                if(steamutils.IsOwner())then
                     AddDestroyedBox(lobby, box_cell[1], box_cell[2])
                     
                     local powerup = GetPowerup(taken_powerups, box_cell[1], box_cell[2])
@@ -591,7 +595,7 @@ Bombergame = {
 
             local current_bombs = json.parse(GlobalsGetValue("bombergame_current_bombs", "[]"))
             for k, v in ipairs(current_bombs)do
-                print(json.stringify(v))
+               -- print(json.stringify(v))
                 steamutils.send("bomb_placed", v, steamutils.messageTypes.OtherPlayers, lobby, true, true)
             end
             GlobalsSetValue("bombergame_current_bombs", "[]")
@@ -623,7 +627,7 @@ Bombergame = {
             local function DeathHandler()
                 steamutils.send("player_died", {}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
                 GameSetCameraFree( true )
-                if(steamutils.IsOwner(lobby))then
+                if(steamutils.IsOwner())then
                     local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
                     if(dead_players_data == nil or dead_players_data == "")then
                         dead_players_data = "{}"
@@ -718,7 +722,9 @@ Bombergame = {
             local GetAlivePlayers = function()
                 local members_alive = {}
                 local members = steamutils.getLobbyMembers(lobby)
+                local no_members = true
                 for k, member in pairs(members) do
+                    no_members = false
                     local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
                     if(dead_players_data == nil or dead_players_data == "")then
                         dead_players_data = "{}"
@@ -727,8 +733,13 @@ Bombergame = {
                     local dead_players = json.parse(dead_players_data)
                     
                     if(not dead_players[tostring(member.id)])then
+                        --print("member is alive")
                         table.insert(members_alive, member.id)
                     end
+                end
+
+                if(no_members)then
+                    return {steam.user.getSteamID()}
                 end
 
                 return members_alive
@@ -740,14 +751,17 @@ Bombergame = {
             --game_funcs.RenderAboveHeadMarkers(client_entities, 0, 34)
 
             local alive_players = GetAlivePlayers()
+            local members = steam.matchmaking.getNumLobbyMembers(lobby)
 
+            --print("alivecount: "..tostring(#alive_players))
+            --print("membercount: "..tostring(members))
 
             if(not game_finished)then
                 if(#alive_players == 0)then
                     GamePrintImportant("Everyone died!", "It is a tie!")
                     game_finished = true
                     --world_loaded = false
-                    if(steamutils.IsOwner(lobby))then
+                    if(steamutils.IsOwner())then
                         steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
                     end
                     GameAddFlagRun("DisableExplosions")
@@ -775,12 +789,12 @@ Bombergame = {
                             GamePrint(string.format("Returning to lobby menu in %s seconds.", tostring(math.floor(frames / 60))))
                         end
                     end)
-                elseif(#alive_players == 1)then
+                elseif(#alive_players == 1 and members > 1)then
                     --print(tostring(alive_players[1]))
                     local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
                     GamePrintImportant(player_name.." won!", "Congratulations!")
                     game_finished = true
-                    if(steamutils.IsOwner(lobby))then
+                    if(steamutils.IsOwner())then
                         steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
                     end
                     GameAddFlagRun("DisableExplosions")
@@ -823,7 +837,7 @@ Bombergame = {
             print(player_name.." left this realm!")
         end
 
-        if(steamutils.IsOwner(lobby))then
+        if(steamutils.IsOwner())then
             local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
             if(dead_players_data == nil or dead_players_data == "")then
                 dead_players_data = "{}"
@@ -833,7 +847,7 @@ Bombergame = {
 
             dead_players[tostring(user)] = true
 
-            print(json.stringify(dead_players))
+            --print(json.stringify(dead_players))
 
             steam.matchmaking.setLobbyData(lobby, "dead_players", json.stringify(dead_players))
         end
@@ -846,7 +860,7 @@ Bombergame = {
     received = function(lobby, event, message, user)
         local events = {
             box_destroyed = function(lobby, event, message, user)
-                if(steamutils.IsOwner(lobby))then
+                if(steamutils.IsOwner())then
                     AddDestroyedBox(lobby, message[1], message[2])
 
                     local taken_powerups = GetTakenPowerups(lobby)
@@ -1015,7 +1029,7 @@ Bombergame = {
                     print(player_name.." blew up!")
                 end
 
-                if(steamutils.IsOwner(lobby))then
+                if(steamutils.IsOwner())then
                     local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
                     if(dead_players_data == nil or dead_players_data == "")then
                         dead_players_data = "{}"
@@ -1069,7 +1083,7 @@ Bombergame = {
                         EntityKill(powerup[1])
                     end
                 end
-                if(steamutils.IsOwner(lobby))then
+                if(steamutils.IsOwner())then
                     AddTakenPowerup(lobby, message.x, message.y)
                 end
             end,
