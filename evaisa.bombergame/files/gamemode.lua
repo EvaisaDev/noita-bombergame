@@ -182,7 +182,7 @@ TakePowerup = function(lobby, x, y)
     local powerup = GetPowerup(taken_powerups, x, y)
     local id = nil
     if(powerup ~= nil)then
-        if(steamutils.IsOwner())then
+        if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
             AddTakenPowerup(lobby, x, y)
         end
         local powerup_id = GetSpawnedPowerup(GetSpawnedPowerups(lobby), x, y)
@@ -235,7 +235,8 @@ end
 Bombergame = {
     id = "bombergame",
     name = "Bombergame",
-    version = 0.31,
+    version = 0.32,
+    version_flavor_text = "Release",
     allow_in_progress_joining = false,
     settings = {
         {
@@ -437,7 +438,7 @@ Bombergame = {
 
 
 
-            if(steamutils.IsOwner())then
+            if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                 ClearDestroyedBoxes(lobby)
                 ClearTakenPowerups(lobby)
                 ClearSpawnedPowerups(lobby)
@@ -463,7 +464,7 @@ Bombergame = {
             
             seed = tonumber(steam.matchmaking.getLobbyData(lobby, "seed") or 1)
 
-            if(randomized_seed and steamutils.IsOwner())then
+            if(randomized_seed and steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                 print("randomizing seed")
                 local a, b, c, d, e, f = GameGetDateAndTimeLocal()
                 SetRandomSeed(GameGetFrameNum() + a + b + c + d + e + f+ 235123, GameGetFrameNum() + a + b + c + d + e + f + 325325)
@@ -578,7 +579,7 @@ Bombergame = {
                 local box_cell = {math.floor(v.x / 16), math.floor(v.y / 16)}
                 steamutils.send("box_destroyed", box_cell, steamutils.messageTypes.OtherPlayers, lobby, true, true)
                 -- check if box contains powerup
-                if(steamutils.IsOwner())then
+                if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                     AddDestroyedBox(lobby, box_cell[1], box_cell[2])
                     
                     local powerup = GetPowerup(taken_powerups, box_cell[1], box_cell[2])
@@ -627,7 +628,7 @@ Bombergame = {
             local function DeathHandler()
                 steamutils.send("player_died", {}, steamutils.messageTypes.OtherPlayers, lobby, true, true)
                 GameSetCameraFree( true )
-                if(steamutils.IsOwner())then
+                if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                     local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
                     if(dead_players_data == nil or dead_players_data == "")then
                         dead_players_data = "{}"
@@ -761,7 +762,7 @@ Bombergame = {
                     GamePrintImportant("Everyone died!", "It is a tie!")
                     game_finished = true
                     --world_loaded = false
-                    if(steamutils.IsOwner())then
+                    if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                         steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
                     end
                     GameAddFlagRun("DisableExplosions")
@@ -794,7 +795,7 @@ Bombergame = {
                     local player_name = steamutils.getTranslatedPersonaName(alive_players[1])
                     GamePrintImportant(player_name.." won!", "Congratulations!")
                     game_finished = true
-                    if(steamutils.IsOwner())then
+                    if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                         steam.matchmaking.setLobbyData(lobby, "in_progress", "false")
                     end
                     GameAddFlagRun("DisableExplosions")
@@ -837,7 +838,7 @@ Bombergame = {
             print(player_name.." left this realm!")
         end
 
-        if(steamutils.IsOwner())then
+        if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
             local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
             if(dead_players_data == nil or dead_players_data == "")then
                 dead_players_data = "{}"
@@ -860,7 +861,7 @@ Bombergame = {
     received = function(lobby, event, message, user)
         local events = {
             box_destroyed = function(lobby, event, message, user)
-                if(steamutils.IsOwner())then
+                if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                     AddDestroyedBox(lobby, message[1], message[2])
 
                     local taken_powerups = GetTakenPowerups(lobby)
@@ -1029,7 +1030,7 @@ Bombergame = {
                     print(player_name.." blew up!")
                 end
 
-                if(steamutils.IsOwner())then
+                if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                     local dead_players_data = steam.matchmaking.getLobbyData(lobby, "dead_players")
                     if(dead_players_data == nil or dead_players_data == "")then
                         dead_players_data = "{}"
@@ -1083,7 +1084,7 @@ Bombergame = {
                         EntityKill(powerup[1])
                     end
                 end
-                if(steamutils.IsOwner())then
+                if(steamutils.IsOwner(MP_VERSION <= 302 and lobby or nil))then
                     AddTakenPowerup(lobby, message.x, message.y)
                 end
             end,
