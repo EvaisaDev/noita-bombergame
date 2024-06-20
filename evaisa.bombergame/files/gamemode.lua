@@ -235,7 +235,7 @@ end
 Bombergame = {
     id = "bombergame",
     name = "Bombergame",
-    version = 0.32,
+    version = 0.33,
     version_flavor_text = "Release",
     allow_in_progress_joining = false,
     settings = {
@@ -552,6 +552,8 @@ Bombergame = {
         ComponentSetValue2(world_state_component, "time_dt", 0)
         ComponentSetValue2(world_state_component, "fog", 0)
         ComponentSetValue2(world_state_component, "intro_weather", true)
+    end,
+    lobby_update = function(lobby)
     end,
     late_update = function(lobby)
         local taken_powerups = GetTakenPowerups(lobby)
